@@ -1,0 +1,203 @@
+---
+title: "Getting started with gapxplore"
+author: "Midhun Unnikrishnan"
+date: "2025-10-27"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with gapxplore}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5
+)
+```
+
+## Overview
+
+**gapxplore** is a small teaching package for **ETC5523: Communicating with Data**.  
+It ships a tidy Gapminder panel (`gm_panel`), continent aggregates (`gm_trends`), a latest-year snapshot (`gm_summary`), and an interactive Shiny app.
+
+With the app you can:
+
+- explore **trends** by continent across years,
+- view a **bubble** chart of countries for any year,
+- **compare** continents at a single year for life expectancy, GDP per capita, or population.
+
+This vignette shows how to install the package, load the data, and make the most of the app.
+
+## Installation
+
+### From GitHub (recommended)
+
+Replace `<your-repo>` with your actual GitHub repo path for this assignment (e.g. `ETC5523-2025/assignment-4-packages-and-shiny-apps-YourUser`).
+
+```r
+# Option A: pak
+install.packages("pak")
+pak::pak("<your-repo>")
+
+# Option B: remotes
+install.packages("remotes")
+remotes::install_github("<your-repo>")
+```
+
+Load the package:
+
+```r
+library(gapxplore)
+```
+
+### From a local checkout
+
+If you've cloned the repo locally:
+
+```r
+# from the project root
+devtools::install()   # or: remotes::install_local(".")
+```
+
+## What data are included?
+
+Three compact data frames ship with the package:
+
+- `gm_panel` — country–year panel (1952–2007, 5-year cadence), with columns  
+  `country`, `continent`, `year`, `lifeExp`, `gdpPercap`, `pop`.
+
+- `gm_summary` — one row per country for the latest year in `gm_panel` (usually 2007), with population in millions as `pop_mill`.
+
+- `gm_trends` — continent–year aggregates used by the app, with columns  
+  `continent`, `year`, `mean_lifeExp`, `mean_gdpPercap`, `pop_total`.
+
+### Quick look
+
+```r
+dplyr::glimpse(gm_panel)
+range(gm_panel$year)
+unique(gm_panel$continent)
+
+head(gm_summary)
+dplyr::glimpse(gm_trends)
+```
+
+## Reproduce core visuals
+
+### Trend lines by continent
+
+```r
+library(ggplot2)
+
+ggplot(
+  gm_trends,
+  aes(year, mean_lifeExp, colour = continent)
+) +
+  geom_line(linewidth = 1) +
+  labs(x = NULL, y = "Life expectancy (years)", colour = NULL) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+Swap to GDP per capita:
+
+```r
+ggplot(
+  gm_trends,
+  aes(year, mean_gdpPercap, colour = continent)
+) +
+  geom_line(linewidth = 1) +
+  labs(x = NULL, y = "GDP per capita (US$)", colour = NULL) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+### Bubble view (latest year)
+
+```r
+yr <- max(gm_panel$year)
+latest <- dplyr::filter(gm_panel, year == yr)
+
+ggplot(
+  latest,
+  aes(gdpPercap, lifeExp, size = pop / 1e6, colour = continent)
+) +
+  geom_point(alpha = 0.8) +
+  scale_size_area(name = "Population (millions)", max_size = 14) +
+  scale_x_log10() +
+  labs(x = "GDP per capita (log10)", y = "Life expectancy (years)", colour = NULL) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## Launch the Shiny app
+
+The interactive explorer is packaged under `inst/app/`. Start it with:
+
+```r
+gapxplore::run_app()
+```
+
+### App tour (what each view shows)
+
+- **Trends (by continent)**  
+  Line chart using continent-level aggregates across the chosen year range.  
+  _Metrics_: life expectancy (mean), GDP per capita (mean), population (total).
+
+- **Bubble (countries)**  
+  Each point is a country for the selected year.  
+  _x_ = GDP per capita (optionally log10), _y_ = life expectancy, size = population (millions), colour = continent.
+
+- **Compare (bar @ year)**  
+  Bar chart of continents at a single year for the chosen metric.
+
+## Example exploration workflows
+
+- **Which continent gained the most life expectancy since 1952?**  
+  Open *Trends*, select the full year range, and compare line slopes.
+
+- **How do continents rank by GDP per capita in 2007?**  
+  Open *Compare*, set Year = 2007, choose *GDP per capita*.
+
+- **Which countries are outliers in 2007?**  
+  Open *Bubble*, Year = 2007, enable log10 on the x-axis, and scan for high/low points.
+
+## Sources & licensing
+
+Data derived from the CRAN package **gapminder** (Gapminder Foundation, CC BY 3.0).  
+See `data-raw/build_gapminder_data.R` for the reproducible build script.
+
+## Package structure
+
+```
+gapxplore/
+├─ R/
+│  ├─ run_app.R                 # exported launcher
+│  ├─ gapxplore-package.R       # package-level docs stub
+│  └─ datasets-gapminder.R      # roxygen docs for gm_* datasets
+├─ inst/
+│  └─ app/
+│     ├─ app.R                  # main Shiny app
+│     └─ www/
+│        └─ app.css             # custom styles
+├─ data/
+│  ├─ gm_panel.rda
+│  ├─ gm_summary.rda
+│  └─ gm_trends.rda
+├─ data-raw/
+│  └─ build_gapminder_data.R    # builds and saves the datasets
+├─ vignettes/
+│  └─ gapxplore-getting-started.Rmd
+├─ man/                         # Rd docs (generated)
+├─ DESCRIPTION
+├─ NAMESPACE
+├─ README.Rmd / README.md
+└─ LICENSE / LICENSE.md
+```
+
+## Acknowledgements
+
+Thanks to the R packaging ecosystem—**usethis**, **devtools**, **roxygen2**—and to **shiny**, **ggplot2**, **plotly**, **dplyr**, **tidyr**, **scales**, and **bslib** for powering the interactive exploration.
