@@ -1,0 +1,44 @@
+url: https://ETC5523-2025.github.io/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/
+template:
+  bootstrap: 5
+  bootswatch: lux
+  bslib:
+    primary: "#7B2CBF"
+    base_font:
+      google: Inter
+    heading_font:
+      google: Poppins
+    code_font:
+      google: "Fira Mono"
+
+home:
+  title: "gapxplore"
+  description: "Explore Gapminder with a polished Shiny app and tidy datasets (ETC5523 Assignment 4)."
+
+navbar:
+  structure:
+    left:  [reference, articles, news]
+    right: [search, github]
+  components:
+    github:
+      icon: fab fa-github
+      href: https://github.com/ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7
+
+reference:
+- title: "Shiny app"
+  contents:
+  - run_app
+
+- title: "Datasets"
+  contents:
+  - gm_panel
+  - gm_trends
+  - gm_summary
+
+articles:
+- title: "Get started"
+  contents:
+  - gapxplore-getting-started
+
+news:
+  one_page: true
