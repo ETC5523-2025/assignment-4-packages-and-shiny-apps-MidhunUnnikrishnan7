@@ -1,77 +1,44 @@
-# gapxplore — Interactive Gapminder Explorer (ETC5523 Assignment 4)
+# gapxplore
 
-<!-- badges: start -->
-<!-- Add pkgdown badge after first deploy:
-[![pkgdown](https://github.com/ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/actions/workflows/pkgdown.yaml/badge.svg)](https://ETC5523-2025.github.io/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/)
--->
-<!-- badges: end -->
+**Website:** <https://ETC5523-2025.github.io/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/>
 
-## Overview
-
-**gapxplore** is an R package for **ETC5523: Communicating with Data**.  
-It includes a documented Gapminder dataset, an **interactive Shiny app**, and a **pkgdown website**.
+**gapxplore** is a small R package for *ETC5523: Communicating with Data*.
+It bundles a polished Shiny app and tidy Gapminder datasets so users can
+explore continent trends, compare values at a given year, and examine
+country-level patterns.
 
 ## Installation
 
 ```r
-# {pak}
-pak::pak("ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7")
-
-# or {remotes}
+# install.packages("remotes")
 remotes::install_github("ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7")
 ```
 
-Load:
+## Launch the app
 
 ```r
 library(gapxplore)
+run_app()
 ```
 
-## Quick start (Shiny app)
+## What’s included?
 
-```r
-gapxplore::run_app()
-```
+- `gm_panel` — country–year panel (1952–2007, every 5 years)  
+- `gm_trends` — continent–year aggregates (means/totals)  
+- `gm_summary` — latest-year snapshot by country
 
-## Data
+The app presents three complementary views:
 
-This package ships a tidy Gapminder dataset (`gm_panel`) with:
+- **Trends (by continent):** lines for continent-level means/totals across the selected years.  
+- **Bubble (countries):** one year; x = GDP per capita (log option), y = life expectancy, size = population (millions), colour = continent.  
+- **Compare (bar @ year):** ranks continents at a single year for the chosen metric.
 
-- `country`, `continent`, `year`
-- `lifeExp` (years), `gdpPercap` (US$), `pop` (persons)
+## Contributing / issues
 
-**Attribution:** Gapminder (CC BY 3.0), via the CRAN **gapminder** package.
-
-## Vignette
-
-- Local: `browseVignettes("gapxplore")`  
-- Web: https://ETC5523-2025.github.io/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/
-
-## Documentation website (pkgdown)
-
-- **Site:** https://ETC5523-2025.github.io/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/  
-- Contains function reference, dataset help pages, and the vignette.
-
-## Repository layout
-
-```
-R/           # functions & data docs
-inst/app/    # Shiny app
-data/        # packaged dataset (.rda)
-data-raw/    # script to create data
-vignettes/   # vignette(s)
-man/         # auto-generated Rd files
-```
-
-## Development
-
-```r
-devtools::document()
-devtools::check()
-pkgdown::build_site()
-```
+This repository is for an academic assignment. If you spot a bug or have a suggestion,
+please open an issue at <https://github.com/ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/issues>.
 
 ## License
 
-MIT © Midhun Unnikrishnan  
-Data © Gapminder (CC BY 3.0)
+MIT License © Midhun Unnikrishnan.  
+Data derived from the CRAN `gapminder` package (CC BY 3.0).
