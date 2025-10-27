@@ -1,0 +1,147 @@
+---
+title: "gapxplore — Interactive Gapminder Explorer (ETC5523 Assignment 4)"
+output: github_document
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "man/figures/README-", out.width = "100%")
+```
+
+<!-- badges: start -->
+<!-- (Optional) Add badges after your first push and pkgdown deploy:
+[![pkgdown](https://github.com/ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/actions/workflows/pkgdown.yaml/badge.svg)](https://ETC5523-2025.github.io/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/)
+-->
+<!-- badges: end -->
+
+## Overview
+
+**gapxplore** is an R package for **ETC5523: Communicating with Data**.  
+It ships a small, documented Gapminder dataset, an **interactive Shiny app** for exploration, and a **pkgdown website** with function docs and a vignette.
+
+**Why this package?**
+
+- Let users **explore** key patterns (life expectancy, GDP per capita, population) by **continent and year**.  
+- Demonstrate clear **documentation, interactivity, and web publishing**.
+
+---
+
+## Installation
+
+From the course GitHub Classroom repo:
+
+```r
+# Option 1: {pak}
+# install.packages("pak")
+pak::pak("ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7")
+
+# Option 2: {remotes}
+# install.packages("remotes")
+remotes::install_github("ETC5523-2025/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7")
+```
+
+Load the package:
+
+```r
+library(gapxplore)
+```
+
+---
+
+## Quick start (Shiny app)
+
+```r
+# Launch the interactive explorer (runs locally)
+gapxplore::run_app()
+```
+
+The app provides:
+- **Plot** tab — continent-level trends for a chosen metric across a year range  
+- **Table** tab — a tidy view of the filtered data  
+- **Guide** tab — variable definitions and how to read the outputs
+
+---
+
+## Data
+
+This package includes a tidy snapshot of Gapminder data:
+
+```r
+# Peek at the structure (won't print huge output on knit)
+str(gm_panel)
+#> 'data.frame':  ... obs. of  6 variables:
+#>  $ country  : chr  ...
+#>  $ continent: chr  ...
+#>  $ year     : int  ...
+#>  $ lifeExp  : num  ...
+#>  $ gdpPercap: num  ...
+#>  $ pop      : int  ...
+```
+
+- `lifeExp` — life expectancy at birth (years)  
+- `gdpPercap` — GDP per capita (US$, inflation-adjusted)  
+- `pop` — population (persons)
+
+> **Attribution:** Data from **Gapminder** (CC BY 3.0), via the CRAN **gapminder** package.
+
+---
+
+## Vignette
+
+A short vignette shows the dataset, key questions to explore, and how interactivity supports the conclusions.
+
+- Open locally:  
+
+```r
+browseVignettes("gapxplore")
+```
+
+- On the website (after CI builds):  
+https://ETC5523-2025.github.io/assignment-4-packages-and-shiny-apps-MidhunUnnikrishnan7/
+
+## Repository layout
+
+```
+.
+├── DESCRIPTION
+├── NAMESPACE
+├── R/
+│   ├── data.R          # roxygen docs for gm_panel
+│   └── run_app.R       # exported launcher
+├── data/
+│   └── gm_panel.rda    # packaged dataset
+├── data-raw/
+│   └── build-data.R    # script to create gm_panel
+├── inst/
+│   └── app/
+│       └── app.R       # Shiny app
+├── man/                # auto-generated docs
+├── vignettes/
+│   └── getting-started.Rmd
+├── README.Rmd / README.md
+└── pkgdown/ (created by CI) 
+```
+
+---
+
+## Development
+
+```r
+# Refresh docs after edits
+devtools::document()
+
+# Run tests (if any)
+devtools::test()
+
+# Check package
+devtools::check()
+
+# Build website locally
+pkgdown::build_site()
+```
+
+---
+
+## License
+
+MIT © Midhun Unnikrishnan  
+Data © Gapminder Foundation (CC BY 3.0)
